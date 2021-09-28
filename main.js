@@ -1,57 +1,67 @@
-
-import TempWrapper, { bind } from "./C.js"
-
-class AH1 extends TempWrapper {
-  constructor() {
-    super()
-    
-    
-  }
+import WCWrapper, { bind } from "./C.js";
  
-  onMount() {
-    this.shadowDom.addListenerTo({ el: "button", listener: "click", callback: this.handleSubmit })
-  }
-  
-  style(i = true) {
-    if(i) {
-      return {
-        el: "div", 
-        styles: {
-          backgroundColor: "red",
-          color: "green",
-        }
-      }
-    } else {
-      return `
-        div {
-          background-color: red;
-          color: green;
-        }
-      `
+
+class Card extends WCWrapper {
+    constructor() {
+        super()
     }
-  }
-  
-  handleSubmit() {
-    console.log("successful!!");
+
+    // LIFECYCLE METHOD
+    onMount(shadowDom) {
+        const p = shadowDom.querySelector('p')
+        const btn = shadowDom.querySelector('#showHide')
+        btn.addEventListener("click", () => {
+            if(p.style.display != "none") {
+                p.style.display = "none"
+                btn.innerText = "Hide"
+            } else {
+                p.style.display = "block"
+                btn.innerText = "Show"
+            }
+            
+        })
+    }
     
-    
-  }
-  
-  render() {
-    console.log(this.h);
-    return (
-      `
-        <div>
-          <h1></h1>
-          <button>Submit</button>
+    styles() {
+        return `
+            .card {
+                background-color: gray;
+                outline: 2px solid yellow;
+                text-align: center;
+            }
+        `
+    }
+
+    render() {
+        return `
+        <div class="card">
+            <h2>Hello</h2>
+            <p>Web Component Library</p>
+            <button id="showHide">Show</button>
         </div>
-      `
-    )
-  }
+        `
+    }
+}
+class Para extends WCWrapper {
+    constructor() {
+        super()
+    }
+    render() {
+        return `
+        <p> hello </p>
+        <wc-card></wc-card>
+        `
+    }
 }
 
 
-bind([{
-  ref: AH1,
-  tag: "a-h1"
-}])
+bind([
+    {
+        tag: "wc-card",
+        ref: Card
+    },
+    {
+        tag: "wc-p",
+        ref: Para
+    },
+])

@@ -1,47 +1,46 @@
+class WCWrapper extends HTMLElement {
 
-class Wrapper extends HTMLElement {
   constructor() {
     super()
-    
-  }
-  
-  
-  
-  createState(state) {
-    return state
-  }
-}
 
+    const template = document.createElement('template')
 
-class TempWrapper extends Wrapper {
-  constructor() {
-    super()
-    
-    this.shadowDom = null
-    
-    this.styles = null
+    //templating
+    template.innerHTML += `
+    <style>
+      ${this.styles()}
+    </style>
+    `
+    template.innerHTML += this.render()
+
+    //add shadow dom
+    this.attachShadow({ mode: "open" })
+    this.shadowRoot.appendChild(template.content.cloneNode(true))
   }
-  
+
   connectedCallback() {
-    let shadowDom = this.shadowRoot
-    this.shadowDom = shadowDom
-    this.shadowRoot.addListenerTo = function (options) {
-      shadowDom.querySelector(options.el).addEventListener(options.listener, function(e) {
-        options.callback(e, shadowDom)
-      })
-    }
-    
-    this.onMount(shadowDom)
+    this.onMount(this.shadowRoot)
   }
-  
-  initComponent
+
+  //STYLES
+  styles() {
+    return ""
+  }
+
+  // LIFECYCLE METHODS
+  onMount(shadowDom) {
+    return null
+  }
+  render() {
+    return ""
+  }
 }
 
-function bind(els) {
-  els.map(el =>  {
+function bind(elems) {
+  elems.map(el => {
     window.customElements.define(el.tag, el.ref)
   })
 }
 
-export default TempWrapper
+export default WCWrapper
 export { bind }
