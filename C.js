@@ -1,26 +1,46 @@
+
+
 class WCWrapper extends HTMLElement {
 
   constructor() {
     super()
+    
+    this.state = {}
+    this.props = {}
 
-    const template = document.createElement('template')
+    this._template = document.createElement('template')
 
     //templating
-    template.innerHTML += `
+    this._template.innerHTML += `
     <style>
       ${this.styles()}
     </style>
     `
-    template.innerHTML += this.render()
-
-    //add shadow dom
-    this.attachShadow({ mode: "open" })
-    this.shadowRoot.appendChild(template.content.cloneNode(true))
+    
   }
 
   connectedCallback() {
+    this._template.innerHTML += this.render()
+    
+    const global = this
+
+    const handler = {
+        get: function(target, prop, receiver) {
+          return global.getAttribute(prop)
+        }
+    };
+
+    this.props = new Proxy({}, handler);
+
+    //add shadow dom
+    this.attachShadow({ mode: "open" })
+    this.shadowRoot.appendChild(this._template.content.cloneNode(true))
+    
     this.onMount(this.shadowRoot)
+    
+    
   }
+  
 
   //STYLES
   styles() {
@@ -28,8 +48,11 @@ class WCWrapper extends HTMLElement {
   }
 
   // LIFECYCLE METHODS
+  getProps(props) {
+    return props
+  }
   onMount(shadowDom) {
-    return null
+    return shadowDom
   }
   render() {
     return ""
@@ -41,6 +64,19 @@ function bind(elems) {
     window.customElements.define(el.tag, el.ref)
   })
 }
+
+
+class Props {
+  constructor() {
+    
+  }
+  
+  get(a,b,c) {
+    console.log(a,b,c);
+    return a[b]
+  }
+}
+
 
 export default WCWrapper
 export { bind }
