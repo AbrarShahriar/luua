@@ -26,7 +26,7 @@ class WCWrapper extends HTMLElement {
 
     const handler = {
         get: function(target, prop, receiver) {
-          return global.getAttribute(prop)
+          return eval(global.getAttribute(prop))
         }
     };
 

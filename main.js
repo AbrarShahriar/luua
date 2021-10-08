@@ -1,14 +1,15 @@
 import WCWrapper, { bind } from "./C.js";
- 
+import Card from './test/Card.js'
 
-class Card extends WCWrapper {
+class MCard extends WCWrapper {
     constructor() {
       super()
     }
 
     // LIFECYCLE METHOD
     onMount(shadowDom) {
-      
+        console.log(typeof this.props.shadow);
+
         const p = shadowDom.querySelector('p')
         const btn = shadowDom.querySelector('#showHide')
         
@@ -59,6 +60,13 @@ class Card extends WCWrapper {
 bind([
     {
         tag: "wc-card",
-        ref: Card
+        ref: MCard
     },
+    {
+        tag: "t-card",
+        ref: Card
+    }
 ])
+
+
+
